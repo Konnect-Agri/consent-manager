@@ -11,16 +11,17 @@ datasource db {
 }
 
 model CARequests {
-  id                          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  caId                        String   @db.Uuid @unique
-  consent_artifact            Json
-  userId                      String
-  state                       State    @default(CREATED)
-  created_at                  DateTime @default(now())
-  created_by                  String
-  updated_at                  DateTime?
-  updated_by                  String?
-  webhook_url                 Json
+  id               String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  caId             String    @unique @db.Uuid
+  consent_artifact Json
+  userId           String
+  state            State     @default(CREATED)
+  created_at       DateTime  @default(now())
+  created_by       String
+  updated_at       DateTime? @default(now())
+  updated_by       String?
+  webhook_url      String
+  total_attempts   Int       @default(0)
 }
 
 enum State {

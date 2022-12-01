@@ -1,4 +1,5 @@
 import { AxiosRequestConfig } from "@nestjs/terminus/dist/health-indicator/http/axios.interfaces";
+import { ConsentArtifact } from "./types/consentArtifact";
 
 export interface Collector {
     id: string;
@@ -91,8 +92,6 @@ export class ConsentAction {
     payload: any;
 }
 
-export class RequestBody { 
-    ca: CAObject;
-    userId: string; 
-    webhookUrl: WebhookRequest; 
+export class RequestBody {
+    ca: ConsentArtifact;
 }

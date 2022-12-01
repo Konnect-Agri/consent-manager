@@ -1,3 +1,8 @@
 node_modules
 keys/
 .env
+
+
+pgdata
+redis-data/
+dist/

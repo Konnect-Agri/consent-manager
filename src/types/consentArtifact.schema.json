@@ -1,0 +1,479 @@
+{
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "$id": "http://example.com/example.json",
+    "type": "object",
+    "default": {},
+    "title": "Consent Artifact",
+    "required": [
+        "signature",
+        "created",
+        "expires",
+        "id",
+        "revocable",
+        "collector",
+        "consumer",
+        "provider",
+        "user",
+        "revoker",
+        "purpose",
+        "user_sign",
+        "collector_sign",
+        "frequency",
+        "total_queries_allowed",
+        "log",
+        "data",
+        "proof"
+    ],
+    "properties": {
+        "signature": {
+            "type": "string",
+            "default": "",
+            "title": "signature",
+            "examples": [
+                ""
+            ]
+        },
+        "created": {
+            "type": "string",
+            "default": "",
+            "title": "created",
+            "examples": [
+                "YYYY-MM-DDThh:mm:ssZn.n"
+            ]
+        },
+        "expires": {
+            "type": "string",
+            "default": "",
+            "title": "expires",
+            "examples": [
+                "YYYY-MM-DDThh:mm:ssZn.n"
+            ]
+        },
+        "id": {
+            "type": "string",
+            "default": "",
+            "title": "CA ID",
+            "examples": [
+                ""
+            ]
+        },
+        "revocable": {
+            "type": "boolean",
+            "default": false,
+            "title": "revocable",
+            "examples": [
+                false
+            ]
+        },
+        "collector": {
+            "type": "object",
+            "default": {},
+            "title": "collector",
+            "required": [
+                "id",
+                "url"
+            ],
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "default": "",
+                    "title": "id",
+                    "examples": [
+                        "did:collector:123"
+                    ]
+                },
+                "url": {
+                    "type": "string",
+                    "default": "",
+                    "title": "url",
+                    "examples": [
+                        "https://sample-collector/api/v1/collect"
+                    ]
+                }
+            },
+            "examples": [
+                {
+                    "id": "did:collector:123",
+                    "url": "https://sample-collector/api/v1/collect"
+                }
+            ]
+        },
+        "consumer": {
+            "type": "object",
+            "default": {},
+            "title": "consumer",
+            "required": [
+                "id",
+                "url"
+            ],
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "default": "",
+                    "title": "id",
+                    "examples": [
+                        "did:consumer:123"
+                    ]
+                },
+                "url": {
+                    "type": "string",
+                    "default": "",
+                    "title": "url",
+                    "examples": [
+                        "https://sample-consumer/api/v1/consume"
+                    ]
+                }
+            },
+            "examples": [
+                {
+                    "id": "did:consumer:123",
+                    "url": "https://sample-consumer/api/v1/consume"
+                }
+            ]
+        },
+        "provider": {
+            "type": "object",
+            "default": {},
+            "title": "provider",
+            "required": [
+                "id",
+                "url"
+            ],
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "default": "",
+                    "title": "id",
+                    "examples": [
+                        "did:proider:123"
+                    ]
+                },
+                "url": {
+                    "type": "string",
+                    "default": "",
+                    "title": "url",
+                    "examples": [
+                        "https://sample-consumer/api/v1"
+                    ]
+                }
+            },
+            "examples": [
+                {
+                    "id": "did:proider:123",
+                    "url": "https://sample-consumer/api/v1"
+                }
+            ]
+        },
+        "user": {
+            "type": "object",
+            "default": {},
+            "title": "user",
+            "required": [
+                "id"
+            ],
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "default": "",
+                    "title": "id",
+                    "examples": [
+                        "did:user:123"
+                    ]
+                }
+            },
+            "examples": [
+                {
+                    "id": "did:user:123"
+                }
+            ]
+        },
+        "revoker": {
+            "type": "object",
+            "default": {},
+            "title": "revoker",
+            "required": [
+                "url",
+                "id"
+            ],
+            "properties": {
+                "url": {
+                    "type": "string",
+                    "default": "",
+                    "title": "url",
+                    "examples": [
+                        "https://sample-revoker/api/v1/revoke"
+                    ]
+                },
+                "id": {
+                    "type": "string",
+                    "default": "",
+                    "title": "id",
+                    "examples": [
+                        "did:user:123"
+                    ]
+                }
+            },
+            "examples": [
+                {
+                    "url": "https://sample-revoker/api/v1/revoke",
+                    "id": "did:user:123"
+                }
+            ]
+        },
+        "purpose": {
+            "type": "string",
+            "default": "",
+            "title": "purpose",
+            "examples": [
+                ""
+            ]
+        },
+        "user_sign": {
+            "type": "string",
+            "default": "",
+            "title": "user_sign",
+            "examples": [
+                ""
+            ]
+        },
+        "collector_sign": {
+            "type": "string",
+            "default": "",
+            "title": "collector_sign",
+            "examples": [
+                ""
+            ]
+        },
+        "frequency": {
+            "type": "object",
+            "default": {},
+            "title": "frequency",
+            "required": [
+                "ttl",
+                "limit"
+            ],
+            "properties": {
+                "ttl": {
+                    "type": "integer",
+                    "default": 0,
+                    "title": "ttl",
+                    "examples": [
+                        1200
+                    ]
+                },
+                "limit": {
+                    "type": "integer",
+                    "default": 0,
+                    "title": "limit",
+                    "examples": [
+                        2
+                    ]
+                }
+            },
+            "examples": [
+                {
+                    "ttl": 1200,
+                    "limit": 2
+                }
+            ]
+        },
+        "total_queries_allowed": {
+            "type": "integer",
+            "default": 0,
+            "title": "Total Queries Allowed",
+            "examples": [
+                1
+            ]
+        },
+        "log": {
+            "type": "object",
+            "default": {},
+            "title": "log",
+            "required": [
+                "consent_use",
+                "data_access"
+            ],
+            "properties": {
+                "consent_use": {
+                    "type": "object",
+                    "default": {},
+                    "title": "Consent Use",
+                    "required": [
+                        "url"
+                    ],
+                    "properties": {
+                        "url": {
+                            "type": "string",
+                            "default": "",
+                            "title": "url",
+                            "examples": [
+                                "https://sample-log/api/v1/log"
+                            ]
+                        }
+                    },
+                    "examples": [
+                        {
+                            "url": "https://sample-log/api/v1/log"
+                        }
+                    ]
+                },
+                "data_access": {
+                    "type": "object",
+                    "default": {},
+                    "title": "data_access",
+                    "required": [
+                        "url"
+                    ],
+                    "properties": {
+                        "url": {
+                            "type": "string",
+                            "default": "",
+                            "title": "The url Schema",
+                            "examples": [
+                                "https://sample-log/api/v1/log"
+                            ]
+                        }
+                    },
+                    "examples": [
+                        {
+                            "url": "https://sample-log/api/v1/log"
+                        }
+                    ]
+                }
+            },
+            "examples": [
+                {
+                    "consent_use": {
+                        "url": "https://sample-log/api/v1/log"
+                    },
+                    "data_access": {
+                        "url": "https://sample-log/api/v1/log"
+                    }
+                }
+            ]
+        },
+        "data": {
+            "type": "string",
+            "default": "",
+            "title": "data",
+            "examples": [
+                ""
+            ]
+        },
+        "proof": {
+            "type": "object",
+            "default": {},
+            "title": "The proof Schema",
+            "required": [
+                "type",
+                "created",
+                "proofPurpose",
+                "verificationMethod",
+                "jws"
+            ],
+            "properties": {
+                "type": {
+                    "type": "string",
+                    "default": "",
+                    "title": "type",
+                    "examples": [
+                        "RsaSignature2018"
+                    ]
+                },
+                "created": {
+                    "type": "string",
+                    "default": "",
+                    "title": "created",
+                    "examples": [
+                        "2017-06-18T21:19:10Z"
+                    ]
+                },
+                "proofPurpose": {
+                    "type": "string",
+                    "default": "",
+                    "title": "proofPurpose",
+                    "examples": [
+                        "assertionMethod"
+                    ]
+                },
+                "verificationMethod": {
+                    "type": "string",
+                    "default": "",
+                    "title": "verificationMethod",
+                    "examples": [
+                        "https://example.edu/issuers/565049#key-1"
+                    ]
+                },
+                "jws": {
+                    "type": "string",
+                    "default": "",
+                    "title": "jws",
+                    "examples": [
+                        ""
+                    ]
+                }
+            },
+            "examples": [
+                {
+                    "type": "RsaSignature2018",
+                    "created": "2017-06-18T21:19:10Z",
+                    "proofPurpose": "assertionMethod",
+                    "verificationMethod": "https://example.edu/issuers/565049#key-1",
+                    "jws": ""
+                }
+            ]
+        }
+    },
+    "examples": [
+        {
+            "signature": "",
+            "created": "YYYY-MM-DDThh:mm:ssZn.n",
+            "expires": "YYYY-MM-DDThh:mm:ssZn.n",
+            "id": "",
+            "revocable": false,
+            "collector": {
+                "id": "did:collector:123",
+                "url": "https://sample-collector/api/v1/collect"
+            },
+            "consumer": {
+                "id": "did:consumer:123",
+                "url": "https://sample-consumer/api/v1/consume"
+            },
+            "provider": {
+                "id": "did:proider:123",
+                "url": "https://sample-consumer/api/v1"
+            },
+            "user": {
+                "id": "did:user:123"
+            },
+            "revoker": {
+                "url": "https://sample-revoker/api/v1/revoke",
+                "id": "did:user:123"
+            },
+            "purpose": "",
+            "user_sign": "",
+            "collector_sign": "",
+            "frequency": {
+                "ttl": 1200,
+                "limit": 2
+            },
+            "total_queries_allowed": 1,
+            "log": {
+                "consent_use": {
+                    "url": "https://sample-log/api/v1/log"
+                },
+                "data_access": {
+                    "url": "https://sample-log/api/v1/log"
+                }
+            },
+            "data": "",
+            "proof": {
+                "type": "RsaSignature2018",
+                "created": "2017-06-18T21:19:10Z",
+                "proofPurpose": "assertionMethod",
+                "verificationMethod": "https://example.edu/issuers/565049#key-1",
+                "jws": ""
+            }
+        }
+    ]
+}

@@ -9,7 +9,12 @@ async function bootstrap() {
     AppModule,
     new FastifyAdapter()
   );
-  app.enableCors()
+  app.enableCors({
+    "origin": "*",
+    "methods": "GET,HEAD,PUT,PATCH,POST,DELETE",
+    "preflightContinue": true,
+    "optionsSuccessStatus": 204
+  });
   const config = new DocumentBuilder()
     .setTitle('Consent Manager')
     .setDescription('Consent Manager APIs')

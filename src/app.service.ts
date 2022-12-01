@@ -7,20 +7,28 @@ import * as fs from 'fs';
 import * as jwt from 'jsonwebtoken';
 import { ConfigService } from '@nestjs/config';
 import { HttpService } from '@nestjs/axios';
+import { ConsentArtifact } from './types/consentArtifact';
+import { CARequests } from '@prisma/client';
+import MagicBellClient, { Notification } from '@magicbell/core';
 
 @Injectable()
 export class AppService {
   constructor(
     private prisma: PrismaService,
     private configService: ConfigService,
-    @Inject(CACHE_MANAGER) private readonly cacheManager: Cache,
-  ){}
+    @Inject(CACHE_MANAGER) private cacheManager: Cache,
+  ) {
+    MagicBellClient.configure({
+      apiKey: this.configService.get<string>('MAGICBELL_API_KEY'),
+      apiSecret: this.configService.get<string>('MAGICBELL_API_SECRET'),
+    });
+  }
 
   getUuid(): string {
     return uuidv4();
   }
 
-  updateCACount(caId: string, ca: any): Promise<any>{
+  updateCACount(caId: string, ca: any): Promise<any> {
     return this.prisma.cARequests.update({
       where: {
         caId: caId,
@@ -31,25 +39,18 @@ export class AppService {
     });
   }
 
-  async getCA(caId: string): Promise<any> {
-    const res = await this.prisma.cARequests.findUnique({
+  async getCA(caId: string): Promise<CARequests> {
+    return this.prisma.cARequests.findUnique({
       where: {
         caId: caId,
-      },
-      select: {
-        consent_artifact: true,
       }
     });
-    const ca = res.consent_artifact;
-    ca['total_query_count'] = ca['total_query_count'] + 1;
-    await this.updateCACount(caId, ca);
-    return ca;
   }
 
   async getQueryCountByKey(key: string): Promise<any> {
     const count = this.cacheManager.get(key) == null ? 0 : parseInt(await this.cacheManager.get(key)) + 1
-    const ttl = parseInt(this.getCA(key)['frequency']['ttl']);
-    this.cacheManager.set(key, count, ttl);
+    // const ttl = parseInt(this.getCA(key)['frequency']['ttl']);
+    // this.cacheManager.set(key, count, ttl);
     return count;
     // if(this.cacheManager.get(key)){
     //   const count = parseInt(await this.cacheManager.get(key)) + 1;
@@ -62,7 +63,7 @@ export class AppService {
     // }
   }
 
-  updateCaStatus(caId: string, state: CAStates): any {
+  async updateCaStatus(caId: string, state: CAStates): Promise<CARequests> {
     return this.prisma.cARequests.update({
       where: {
         caId: caId,
@@ -72,37 +73,104 @@ export class AppService {
       }
     });
   }
-  
-  tokenizeRequest(payload: any): any {
-    var privateKEY  = fs.readFileSync('../keys/private.key', 'utf8');
+
+  async updateFrequency(ca: CARequests): Promise<any> {
+    if (ca == null) {
+      return 404;
+    } else {
+      const consentArtifact: ConsentArtifact = ca['consent_artifact'] as ConsentArtifact;
+      if (ca.total_attempts + 1 <= consentArtifact.total_queries_allowed) {
+        const currentValue = await this.cacheManager.get(ca.caId);
+        if (!currentValue || currentValue == null) {
+          this.cacheManager.set(ca.caId, 1, consentArtifact.frequency.ttl);
+          await this.prisma.cARequests.update({
+            where: {
+              caId: ca.caId,
+            },
+            data: {
+              total_attempts: ca.total_attempts + 1,
+            }
+          });
+          return 200;
+        } else {
+          const nextValue: number = parseInt(currentValue as string) + 1;
+          if (nextValue > consentArtifact.frequency.limit) {
+            return 429;
+          } else {
+            await this.cacheManager.set(ca.caId, nextValue, consentArtifact.frequency.ttl);
+            await this.prisma.cARequests.update({
+              where: {
+                caId: ca.caId,
+              },
+              data: {
+                total_attempts: ca.total_attempts + 1,
+              }
+            });
+            return 200;
+          }
+        }
+      } else {
+        return 429;
+      }
+    }
+  }
+
+  updateProof(caId: string, body: ConsentArtifact, state: CAStates): Promise<any> {
+    return this.prisma.cARequests.update({
+      where: {
+        caId: caId,
+      },
+      data: {
+        consent_artifact: body as object,
+        state: state,
+      }
+    });
+  }
+
+  tokenizeRequest(payload: ConsentArtifact): any {
+    var privateKEY = fs.readFileSync('./keys/private.key', 'utf8');
     var signOptions = {
       issuer: this.configService.get<string>('JWT_ISSUER'),
-      subject: this.configService.get<string>('JWT_SUBJECT'),
-      audience: this.configService.get<string>('JWT_AUDIENCE'),
-      expiresIn: this.configService.get<string>('JWT_EXPIRES'),
+      subject: payload.user.id,
+      audience: payload.consumer.id,
+      expiresIn: "120h",
       algorithm: this.configService.get<string>('JWT_ALGORITHM')
     };
     const proof = {
-      type: this.configService.get<number>('JWT_ALGORITHM'),
+      type: this.configService.get<string>('JWT_ALGORITHM'),
       created: new Date().toLocaleString(),
       proofPurpose: "jwtVerify",
-      verificationMethod: this.configService.get<number>('PUBLIC_KEY_URL'),
+      verificationMethod: this.configService.get<string>('PUBLIC_KEY_URL'),
+      jws: jwt.sign(payload as object, privateKEY, signOptions)
     }
-    payload['proof'] = proof;
-    const token = jwt.sign(payload, privateKEY, signOptions);
-    return payload;
+    return proof;
   }
 
-  register(ca: object, userId: string, webhook_url: object): void {
-    const caObject = this.prisma.cARequests.create({
+  async register(ca: ConsentArtifact, userId: string, webhook_url: string): Promise<CARequests> {
+    const caId = this.getUuid();
+    ca.id = caId;
+    const c: CARequests = await this.prisma.cARequests.create({
       data: {
-        caId: this.getUuid(),
-      consent_artifact: ca,
-      userId: userId,
-      state: CAStates.CREATED,
-      created_by: "API",
-      webhook_url: webhook_url,
+        caId: caId,
+        consent_artifact: ca as object,
+        userId: userId,
+        state: CAStates.CREATED,
+        created_by: "API",
+        webhook_url: webhook_url,
       }
     })
+    await this.notifyUserOnMagicBell(ca);
+    return c;
+  }
+
+  async notifyUserOnMagicBell(ca: ConsentArtifact): Promise<any> {
+    await Notification.create({
+      title: 'Consent Artifact Requested',
+      content: `A consent artifact has been requested by ${ca.consumer.id} for the following fields: ${ca.data}`,
+      recipients: [{ email: ca.user.id }],
+      custom_attributes: ca as Record<string, unknown>,
+    }).then((notification) => {
+      console.log(notification);
+    });
   }
 }
