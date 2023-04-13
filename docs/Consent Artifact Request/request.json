@@ -1,0 +1,43 @@
+{
+  "signature": "",
+  "created": "YYYY-MM-DDThh:mm:ssZn.n",
+  "expires": "YYYY-MM-DDThh:mm:ssZn.n",
+  "id": "",
+  "revocable": false,
+  "collector": {
+      "id": "did:collector:123",
+      "url": "https://api.consent-manager.konnect.samagra.io"
+  },
+  "consumer": {
+      "id": "did:consumer:123",
+      "url": "https://sample-consumer/api/v1/consume"
+  },
+  "provider": {
+      "id": "did:proider:123",
+      "url": "https://sample-consumer/api/v1"
+  },
+  "user": {
+      "id": "farmer-1@gmail.com"
+  },
+  "revoker": {
+      "url": "https://sample-revoker/api/v1/revoke",
+      "id": "did:user:123"
+  },
+  "purpose": "",
+  "user_sign": "",
+  "collector_sign": "",
+  "frequency": {
+      "ttl": 5,
+      "limit": 2
+  },
+  "total_queries_allowed": 10,
+  "log": {
+      "consent_use": {
+          "url": "https://sample-log/api/v1/log"
+      },
+      "data_access": {
+          "url": "https://sample-log/api/v1/log"
+      }
+  },
+  "data": "<Valid superset GraphQL query of consented data>"
+}
