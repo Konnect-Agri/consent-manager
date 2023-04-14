@@ -56,20 +56,26 @@ components:
           description: Webhook URL where the user was notified of the access request
           
     ConsentArtifact:
-      description: This schema defines the structure of a consent artifact
+      description: This schema defines the structure of a consent artifact. In the description of fields, the term `user` refers to the entity whose data needs to be accessed. For example in case of Safal Odisha, the `user` will be a farmer whose data needs to be fetched from the Krushak Odisha database.
       type: object
       properties:
-        signature: 
+        signature:
+          description: Cryptographic signature to check the integrity of a consent artifact
           type: string
         created:
+          description: Date on which the artifact was created
           type: string
         expires:
+          description: Date on which the consent agreed for expires
           type: string
         id:
+          description: UUID of the consent artifact
           type: string
         revocable:
+          description: Defines if the credential is revocable or not
           type: boolean
         collector:
+          description: Information about the data collector
           type: object
           properties:
             id: 
@@ -77,14 +83,15 @@ components:
             url:
               type: string
         consumer:
+          description: Information about the data consumer (whoever will be using the data fetched using the consent artifact)
           type: object
           properties:
             id: 
               type: string
             url:
               type: string
-        
         provider:
+          description: Information about the data provider
           type: object
           properties:
             id: 
@@ -92,6 +99,7 @@ components:
             url:
               type: string
         revoker:
+          description: Information about the artifact revoker
           type: object
           properties:
             id: 
@@ -99,17 +107,22 @@ components:
             url:
               type: string
         user:
+          description: Information about the user whose data can be accessed via this consent artifact
           type: object
           properties:
             id: 
               type: string
         purpose:
+          description: Purpose of the consent artifact
           type: string
         user_sign:
+          description: crypotgraphic signature of the user whose data is to be accessed
           type: string
         collector_sign:
+          description: cryptographic signature of the collector
           type: string
         frequency:
+          description: This object represents the frequence with which the data can be accessed using this consent artifact. We can do `limit` number of requests within `ttl` number of seconds  
           type: object
           properties:
             ttl:
@@ -117,8 +130,10 @@ components:
             limit:
               type: number
         total_queries_allowed:
+          description: Total data retrieval queries that can be made using this consent artifact in its lifetime, after these are exhausted the consent artifact cannot be used to send further requests even if it not revoked or expired.
           type: number
         log:
+          description: A log of the access requests
           type: object
           properties:
             consent_use:
@@ -132,4 +147,5 @@ components:
                 url: 
                   type: string
         data:
+          description: This is the superset GraphQL query containing of all the fields that the user has granted access to.
           type: string
