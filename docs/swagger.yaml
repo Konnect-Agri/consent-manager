@@ -1,0 +1,114 @@
+openapi: 3.0.3
+info:
+  title: Consent Artifact API Documentation
+  description: 
+    API documentation for managing Consent Artifacts
+  version: 0.0.1
+externalDocs:
+  description: Find out more about Konnect
+  url: https://github.com/Konnect-Agri
+
+
+paths:
+  /register:
+    post:
+      tags:
+        - Consent artifact request from Consumer
+      summary: Consent artifact request from Consumer
+      description: Consent artifact request from Consumer
+      operationId: register
+      requestBody:
+        description: Consent artifact request from Consumer
+        content:
+          application/json:
+            schema:
+                $ref: '#/components/schemas/ConsentArtifact'
+      responses:
+        '200':
+          description: Successful operation
+          # content:
+          #   application/json:
+          #     schema:
+          #       type: object
+          #       properties:
+                            
+components:
+  schemas:
+    ConsentArtifact:
+      description: This schema defines the structure of a consent artifact
+      type: object
+      properties:
+        signature: 
+          type: string
+        created:
+          type: string
+        expires:
+          type: string
+        id:
+          type: string
+        revocable:
+          type: boolean
+        collector:
+          type: object
+          properties:
+            id: 
+              type: string
+            url:
+              type: string
+        consumer:
+          type: object
+          properties:
+            id: 
+              type: string
+            url:
+              type: string
+        
+        provider:
+          type: object
+          properties:
+            id: 
+              type: string
+            url:
+              type: string
+        revoker:
+          type: object
+          properties:
+            id: 
+              type: string
+            url:
+              type: string
+        user:
+          type: object
+          properties:
+            id: 
+              type: string
+        purpose:
+          type: string
+        user_sign:
+          type: string
+        collector_sign:
+          type: string
+        frequency:
+          type: object
+          properties:
+            ttl:
+              type: number
+            limit:
+              type: number
+        total_queries_allowed:
+          type: number
+        log:
+          type: object
+          properties:
+            consent_use:
+              type: object
+              properties:
+                url: 
+                  type: string
+            data_access:
+              type: object
+              properties:
+                url: 
+                  type: string
+        data:
+          type: string
