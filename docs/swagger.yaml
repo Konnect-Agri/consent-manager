@@ -26,14 +26,35 @@ paths:
       responses:
         '200':
           description: Successful operation
-          # content:
-          #   application/json:
-          #     schema:
-          #       type: object
-          #       properties:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RegisterResponse'
                             
 components:
   schemas:
+    RegisterResponse:
+      description: The object returned as response on a consent artifact request
+      type: object
+      properties:
+        caId:
+          description: ID of the consent artifact in UUID format
+          type: string
+        consent_artifact:
+          description: The actual consent artifact sent along side the request
+          allOf:
+            - $ref: '#/components/schemas/ConsentArtifact'
+        user_id:
+          description: user id of the consumer data is requested from
+          type: string
+        state:
+          description: current state of the request
+          type: string
+        created_by:
+          type: string
+        webhook_url:
+          description: Webhook URL where the user was notified of the access request
+          
     ConsentArtifact:
       description: This schema defines the structure of a consent artifact
       type: object
