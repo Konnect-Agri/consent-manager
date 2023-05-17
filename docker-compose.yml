@@ -54,6 +54,17 @@ services:
     ports:
       - 8088:8001
 
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    ports:
+        - 5672:5672
+        - 15672:15672
+    volumes:
+        - ~/.docker-conf/rabbitmq/data/:/var/lib/rabbitmq/
+        - ~/.docker-conf/rabbitmq/log/:/var/log/rabbitmq
+    networks:
+        - rabbitmq_go_net
+
   authentication:
     image: authentication
     build:
@@ -73,6 +84,8 @@ services:
       - .env
     ports:
       - 3333:3333
+    networks:
+      - rabbitmq_go_net
   
   gatekeeper:
     image: gatekeeper
@@ -93,6 +106,10 @@ services:
       - .env
     ports:
       - 3001:3001
+  
+networks:
+  rabbitmq_go_net:
+    driver: bridge
 
 volumes:
   redisinsight:
