@@ -1,4 +1,48 @@
 {
   "collection": "@nestjs/schematics",
-  "sourceRoot": "src"
+  "sourceRoot": "apps/consent-manager/src",
+  "monorepo": true,
+  "root": "apps/consent-manager",
+  "compilerOptions": {
+    "webpack": true,
+    "tsConfigPath": "apps/consent-manager/tsconfig.app.json"
+  },
+  "projects": {
+    "consent-manager": {
+      "type": "application",
+      "root": "apps/consent-manager",
+      "entryFile": "main",
+      "sourceRoot": "apps/consent-manager/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/consent-manager/tsconfig.app.json"
+      }
+    },
+    "authentication": {
+      "type": "application",
+      "root": "apps/authentication",
+      "entryFile": "main",
+      "sourceRoot": "apps/authentication/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/authentication/tsconfig.app.json"
+      }
+    },
+    "gatekeeper": {
+      "type": "application",
+      "root": "apps/gatekeeper",
+      "entryFile": "main",
+      "sourceRoot": "apps/gatekeeper/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/gatekeeper/tsconfig.app.json"
+      }
+    },
+    "resolver": {
+      "type": "application",
+      "root": "apps/resolver",
+      "entryFile": "main",
+      "sourceRoot": "apps/resolver/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/resolver/tsconfig.app.json"
+      }
+    }
+  }
 }

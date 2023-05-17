@@ -129,7 +129,7 @@ export class AppService {
 
   tokenizeRequest(payload: ConsentArtifact): any {
     var privateKEY = fs.readFileSync('./keys/private.key', 'utf8');
-    var signOptions = {
+    var signOptions:any = {
       issuer: this.configService.get<string>('JWT_ISSUER'),
       subject: payload.user.id,
       audience: payload.consumer.id,
