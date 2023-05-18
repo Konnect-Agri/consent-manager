@@ -4,7 +4,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { TerminusModule } from '@nestjs/terminus';
 import redisStore from 'cache-manager-redis-store';
-import { PrismaHealthIndicator } from 'prisma/prisma.health';
+import { PrismaHealthIndicator } from '../prisma/prisma.health';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { PrismaService } from './prisma.service';

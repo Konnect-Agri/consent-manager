@@ -24,7 +24,7 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
 
-  const port = process.env.PORT || 3333;
+  const port = process.env.CONSENT_MANAGER_PORT || 3333;
   await app.startAllMicroservices();
   await app.listen(port);
   Logger.log(
