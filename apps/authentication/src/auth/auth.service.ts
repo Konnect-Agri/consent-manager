@@ -103,17 +103,19 @@ export class AuthService {
       //   reqOptions,
       // );
 
-      console.log("Trying consent manager now");
-
       const caRes = await lastValueFrom(
         this.httpService
           .post(
-            'http://localhost:3333/verify',
+            `${process.env.CONSENT_MANAGER_URI}/verify`,
             raw,
             reqOptions,
           )
           .pipe(map((response) => response.data)),
       );
+
+      if (caRes.status != 200) {
+        return "An error occured while verifying Consent Artifact";
+      }
 
       const responseData = await lastValueFrom(
         this.httpService
