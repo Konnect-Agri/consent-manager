@@ -60,6 +60,18 @@ export class AppController {
     const status = await this.appService.updateFrequency(ca);
     if (status === 200) {
       return ca;
+    } else if (status === 403) {
+      throw new HttpException({
+        statusCode: HttpStatus.FORBIDDEN,
+        error: 'Consent has been revoked for this artifact',
+        message: 'Consent has been revoked for this artifact',
+      }, 403);
+    } else if (status === 410) {
+      throw new HttpException({
+        statusCode: HttpStatus.GONE,
+        error: 'Requested Consent Artifact has expired',
+        message: 'Requested Consent Artifact has expired',
+      }, 410);
     } else if (status === 429) {
       throw new HttpException({
         statusCode: HttpStatus.TOO_MANY_REQUESTS,

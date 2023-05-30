@@ -97,10 +97,22 @@ export class AuthService {
       //     throw new InternalServerErrorException(error);
       //   });
 
-      this.httpService.post(
-        'https://api.consent-manager.konnect.samagra.io/verify',
-        raw,
-        reqOptions,
+      // this.httpService.post(
+      //   'https://api.consent-manager.konnect.samagra.io/verify',
+      //   raw,
+      //   reqOptions,
+      // );
+
+      console.log("Trying consent manager now");
+
+      const caRes = await lastValueFrom(
+        this.httpService
+          .post(
+            'http://localhost:3333/verify',
+            raw,
+            reqOptions,
+          )
+          .pipe(map((response) => response.data)),
       );
 
       const responseData = await lastValueFrom(
@@ -116,6 +128,8 @@ export class AuthService {
       return responseData;
     } catch (err) {
       console.log('err: ', err);
+      if (err?.response?.data)
+        return err?.response?.data;
       throw new InternalServerErrorException();
     }
   }
