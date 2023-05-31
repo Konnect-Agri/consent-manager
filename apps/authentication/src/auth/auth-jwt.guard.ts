@@ -15,12 +15,6 @@ export class JwtAuthGuard extends AuthGuard('jwt') implements IAuthGuard {
 
   public async canActivate(context: ExecutionContext): Promise<boolean> {
     await super.canActivate(context);
-    // console.log("CONTEXT:", context)
-    // console.log('context: ', context.getHandler());
-    // console.log(
-    //   'context.switchToHttp().getRequest(): ',
-    //   context.switchToHttp().getRequest()['user']['roles'],
-    // );
     const roles = this.reflector.get<string[]>('roles', context.getHandler());
     console.log('roles: ', roles);
     // if (!roles) {
