@@ -97,11 +97,25 @@ export class AuthService {
       //     throw new InternalServerErrorException(error);
       //   });
 
-      this.httpService.post(
-        'https://api.consent-manager.konnect.samagra.io/verify',
-        raw,
-        reqOptions,
+      // this.httpService.post(
+      //   'https://api.consent-manager.konnect.samagra.io/verify',
+      //   raw,
+      //   reqOptions,
+      // );
+
+      const caRes = await lastValueFrom(
+        this.httpService
+          .post(
+            `${process.env.CONSENT_MANAGER_URI}/verify`,
+            raw,
+            reqOptions,
+          )
+          .pipe(map((response) => response.data)),
       );
+
+      if (caRes.status != 200) {
+        return "An error occured while verifying Consent Artifact";
+      }
 
       const responseData = await lastValueFrom(
         this.httpService
@@ -116,6 +130,8 @@ export class AuthService {
       return responseData;
     } catch (err) {
       console.log('err: ', err);
+      if (err?.response?.data)
+        return err?.response?.data;
       throw new InternalServerErrorException();
     }
   }

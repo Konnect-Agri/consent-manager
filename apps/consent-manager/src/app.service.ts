@@ -79,6 +79,17 @@ export class AppService {
       return 404;
     } else {
       const consentArtifact: ConsentArtifact = ca['consent_artifact'] as ConsentArtifact;
+      const currDate = new Date();
+
+      // If the Consent Artifact has expired
+      if (new Date(consentArtifact.expires) <= currDate) {
+        return 410;
+      }
+      // If the Consent Artifact has been revoked.
+      if (ca.state == 'REVOKED') {
+        return 403;
+      }
+
       if (ca.total_attempts + 1 <= consentArtifact.total_queries_allowed) {
         const currentValue = await this.cacheManager.get(ca.caId);
         if (!currentValue || currentValue == null) {
