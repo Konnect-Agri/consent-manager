@@ -26,7 +26,7 @@ async function bootstrap() {
 
   const port = process.env.CONSENT_MANAGER_PORT || 3333;
   await app.startAllMicroservices();
-  await app.listen(port);
+  await app.listen(port, '0.0.0.0');
   Logger.log(
     `🚀 Application is running on: http://localhost:${port}/`
   );

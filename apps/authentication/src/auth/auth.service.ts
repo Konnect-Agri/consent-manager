@@ -112,6 +112,9 @@ export class AuthService {
           )
           .pipe(map((response) => response.data)),
       );
+      if (!caRes.caId) {
+        return "An error occured while verifying Consent Artifact";
+      }
 
       if (caRes.status != 200) {
         return "An error occured while verifying Consent Artifact";
