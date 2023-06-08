@@ -10,15 +10,9 @@ export class AuthService {
   async handleAuth(authDTO: AuthDto) {
     //TODO: add consent artifact processin
     try {
-      const requestOptions = {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      };
       // const myHeaders = new Headers();
       // myHeaders.append('Content-Type', 'application/json');
 
-      const raw = authDTO.consentArtifact;
       // var raw = JSON.stringify({
       //   "id": "927d81cf-77ee-4528-94d1-2d98a2595740",
       //   "caId": "036232e5-0ac7-4863-bad2-c70e70ef2d2f",
@@ -81,14 +75,13 @@ export class AuthService {
       //   "webhook_url": "https://sample-consumer/api/v1/consume",
       //   "total_attempts": 0
       // });
-      const reqOptions = {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: raw,
-        redirect: 'follow',
-      };
+      // const reqOptions = {
+      //   method: 'POST',
+      //   headers: {
+      //     'Content-Type': 'application/json',
+      //   },
+      //   redirect: 'follow',
+      // };
       // fetch('https://api.consent-manager.konnect.samagra.io/verify', reqOptions)
       //   .then((response) => response.text())
       //   .then((result) => console.log(result))
@@ -105,10 +98,8 @@ export class AuthService {
 
       const caRes = await lastValueFrom(
         this.httpService
-          .post(
-            `${process.env.CONSENT_MANAGER_URI}/verify`,
-            raw,
-            reqOptions,
+          .get(
+            `${process.env.CONSENT_MANAGER_URI}/${authDTO.caId}/verify`
           )
           .pipe(map((response) => response.data)),
       );
@@ -116,16 +107,13 @@ export class AuthService {
         return "An error occured while verifying Consent Artifact";
       }
 
-      if (caRes.status != 200) {
-        return "An error occured while verifying Consent Artifact";
-      }
+      console.log("CA RES---->", caRes)
 
       const responseData = await lastValueFrom(
         this.httpService
           .post(
             process.env.LINK_TO_AUTHORIZATION_SERVICE,
-            { consentArtifact: authDTO.consentArtifact, gql: authDTO.gql },
-            requestOptions,
+            { consentArtifact: caRes, gql: authDTO.gql }
           )
           .pipe(map((response) => response.data)),
       );

@@ -82,12 +82,22 @@ export class AppService {
       const currDate = new Date();
 
       // If the Consent Artifact has expired
-      if (new Date(consentArtifact.expires) <= currDate) {
+      if ((new Date(consentArtifact.expires) <= currDate) || ca.state == 'EXPIRED') {
         return 410;
       }
       // If the Consent Artifact has been revoked.
       if (ca.state == 'REVOKED') {
         return 403;
+      }
+
+      // If the Consent Artifact has been revoked.
+      if (ca.state == 'DECLINE') {
+        return 403;
+      }
+
+      // If the Consent Artifact has been revoked.
+      if (ca.state == 'CREATED') {
+        return 401;
       }
 
       if (ca.total_attempts + 1 <= consentArtifact.total_queries_allowed) {
@@ -139,8 +149,8 @@ export class AppService {
   }
 
   tokenizeRequest(payload: ConsentArtifact): any {
-    var privateKEY = fs.readFileSync('./keys/private.key', 'utf8');
-    var signOptions:any = {
+    var privateKEY = fs.readFileSync(process.cwd() + '/apps/consent-manager/keys/private.key', 'utf8');
+    var signOptions: any = {
       issuer: this.configService.get<string>('JWT_ISSUER'),
       subject: payload.user.id,
       audience: payload.consumer.id,
