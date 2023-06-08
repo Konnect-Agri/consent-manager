@@ -1,0 +1,18 @@
+.container {
+    background: #fff;
+    padding: 3rem 2rem;
+    width: 60vw;
+    margin: auto;
+    display: flex;
+    margin-top: 5rem;
+    border-radius: 0.5rem;
+    flex-direction: column;
+    box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px, rgba(0, 0, 0, 0.22) 0px 10px 10px;
+}
+
+.container p:nth-child(1) {
+    font-size: 2rem;
+    color: #424242;
+    font-weight: 600;
+    text-align: center;
+}

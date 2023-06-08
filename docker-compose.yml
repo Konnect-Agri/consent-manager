@@ -56,11 +56,11 @@ services:
   rabbitmq:
     image: rabbitmq:3-management-alpine
     ports:
-        - 5672:5672
-        - 15672:15672
+      - 5672:5672
+      - 15672:15672
     volumes:
-        - ~/.docker-conf/rabbitmq/data/:/var/lib/rabbitmq/
-        - ~/.docker-conf/rabbitmq/log/:/var/log/rabbitmq
+      - ~/.docker-conf/rabbitmq/data/:/var/lib/rabbitmq/
+      - ~/.docker-conf/rabbitmq/log/:/var/log/rabbitmq
 
   authentication:
     image: authentication
@@ -89,7 +89,7 @@ services:
     depends_on:
       - shortdb
     restart: always
-  
+
   gatekeeper:
     image: gatekeeper
     build:
@@ -100,7 +100,7 @@ services:
     ports:
       - 3000:3000
     restart: always
-  
+
   resolver:
     image: resolver
     build:
@@ -111,6 +111,16 @@ services:
     ports:
       - 3001:3001
     restart: always
+
+  mock-ui:
+    image: mock-ui
+    build:
+      context: apps/mock-ui
+      dockerfile: ./Dockerfile
+    env_file:
+      - .env
+    ports:
+      - 4000:3000
 
 volumes:
   redisinsight:
