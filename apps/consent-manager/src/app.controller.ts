@@ -54,23 +54,29 @@ export class AppController {
 
   @ApiOperation({ summary: 'Verify CA' })
   @ApiResponse({ type: GetCAResponse, status: 200, description: 'Get CA details' })
-  @Post('verify/')
-  async verifyCA(@Body() caRequest: object): Promise<any> {
-    const ca: CARequests = await this.appService.getCA(caRequest["caId"]);
+  @Get('/:caId/verify')
+  async verifyCA(@Param('caId') caId: string): Promise<any> {
+    const ca: CARequests = await this.appService.getCA(caId);
     const status = await this.appService.updateFrequency(ca);
     if (status === 200) {
       return ca;
+    } else if (status === 401) {
+      throw new HttpException({
+        statusCode: HttpStatus.UNAUTHORIZED,
+        error: 'Consent has not been provided by the user yet',
+        message: 'Consent has not been provided by the user yet',
+      }, 401);
     } else if (status === 403) {
       throw new HttpException({
         statusCode: HttpStatus.FORBIDDEN,
-        error: 'Consent has been revoked for this artifact',
-        message: 'Consent has been revoked for this artifact',
+        error: 'Consent has been REVOKED or DECLINED for this artifact',
+        message: 'Consent has been REVOKED or DECLINED for this artifact',
       }, 403);
     } else if (status === 410) {
       throw new HttpException({
         statusCode: HttpStatus.GONE,
-        error: 'Requested Consent Artifact has expired',
-        message: 'Requested Consent Artifact has expired',
+        error: 'Requested Consent Artifact has EXPIRED',
+        message: 'Requested Consent Artifact has EXPIRED',
       }, 410);
     } else if (status === 429) {
       throw new HttpException({

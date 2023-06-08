@@ -1,5 +1,5 @@
 export class AuthDto {
-  consentArtifact: JSON;
+  caId: string
   gql: string;
   token: string;
 }
