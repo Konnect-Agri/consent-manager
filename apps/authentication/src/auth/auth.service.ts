@@ -2,6 +2,7 @@ import { HttpService } from '@nestjs/axios';
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { lastValueFrom, map } from 'rxjs';
 import { AuthDto } from './dto/auth.dto';
+import { CA } from './dto/ca.dto';
 
 @Injectable()
 export class AuthService {
@@ -119,6 +120,55 @@ export class AuthService {
       );
 
       return responseData;
+    } catch (err) {
+      console.log('err: ', err);
+      if (err?.response?.data)
+        return err?.response?.data;
+      throw new InternalServerErrorException();
+    }
+  }
+
+  handleRegister = async (data: CA) => {
+    try {
+      let ca = data.consentArtifact
+      const caRes = await lastValueFrom(
+        this.httpService
+          .post(
+            `${process.env.CONSENT_MANAGER_URI}/register`,
+            { ca }
+          )
+          .pipe(map((response) => response.data)),
+      );
+      if (!caRes.caId) {
+        return "An error occured while creating Consent Artifact";
+      }
+
+      return caRes;
+
+    } catch (err) {
+      console.log('err: ', err);
+      if (err?.response?.data)
+        return err?.response?.data;
+      throw new InternalServerErrorException();
+    }
+  }
+
+  handleConsent = async (caId: string, type: string) => {
+    try {
+      const caRes = await lastValueFrom(
+        this.httpService
+          .patch(
+            `${process.env.CONSENT_MANAGER_URI}/${caId}/${type}`
+          )
+          .pipe(map((response) => response.data)),
+      );
+
+      if (!caRes.caId) {
+        return "An error occured while performing the requested action";
+      }
+
+      return caRes;
+
     } catch (err) {
       console.log('err: ', err);
       if (err?.response?.data)
