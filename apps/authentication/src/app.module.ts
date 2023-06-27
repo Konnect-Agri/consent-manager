@@ -5,9 +5,11 @@ import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { TerminusModule } from '@nestjs/terminus';
 import { HttpModule } from '@nestjs/axios';
+import { UserModule } from './user/user.module';
 @Module({
   imports: [
     AuthModule,
+    UserModule,
     ConfigModule.forRoot({
       isGlobal: true,
     }),
@@ -17,4 +19,4 @@ import { HttpModule } from '@nestjs/axios';
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule { }

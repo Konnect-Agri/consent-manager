@@ -10,6 +10,7 @@ import { CAObject, CAStates, ConsentAction, GetCAResponse, RequestBody, WebhookR
 import { AppService } from './app.service';
 import { ConsentArtifact, TheProofSchema } from './types/consentArtifact';
 import { CARequests } from '@prisma/client';
+import { RegisterCA } from './types/RegisterCA';
 
 @Controller()
 export class AppController {
@@ -117,9 +118,9 @@ export class AppController {
     return updatedCARequest;
   }
 
-  @ApiOperation({ summary: 'Decline CA' })
+  @ApiOperation({ summary: 'Reject CA' })
   @ApiResponse({ type: ConsentAction, status: 200, description: 'Reject a CA Request' })
-  @Patch('/:caId/decline')
+  @Patch('/:caId/reject')
   async rejectCA(@Param('caId') caId: string): Promise<CARequests> {
     const caRequest = await this.appService.updateCaStatus(caId, CAStates.DECLINE);
     return caRequest;
@@ -128,7 +129,7 @@ export class AppController {
   @ApiOperation({ summary: 'Register CA' })
   @ApiResponse({ type: CAObject, status: 200, description: 'Create a new CA Request entry' })
   @Post('/register')
-  register(@Body() ca: ConsentArtifact): Promise<CARequests> {
-    return this.appService.register(ca, ca.user.id, ca.consumer.url);
+  register(@Body() body: RegisterCA): Promise<CARequests> {
+    return this.appService.register(body.ca, body.ca.user.id, body.ca.consumer.url);
   }
 }
