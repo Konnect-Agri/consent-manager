@@ -17,7 +17,7 @@ export class AuthService {
       const permissionRes = await lastValueFrom(
         this.httpService
           .post(
-            `http://localhost:6000/user/checkPermission`,
+            `${process.env.AUTH_SELF_URL}/user/checkPermission`,
             {
               caId: authDTO.caId,
               userEmail
@@ -86,7 +86,7 @@ export class AuthService {
       const userRes = await lastValueFrom(
         this.httpService
           .patch(
-            `http://localhost:6000/user/updateUserCaIds`,
+            `${process.env.AUTH_SELF_URL}/user/updateUserCaIds`,
             {
               caId: caRes.caId,
               userEmail
@@ -113,7 +113,7 @@ export class AuthService {
       const permissionRes = await lastValueFrom(
         this.httpService
           .post(
-            `http://localhost:6000/user/checkPermission`,
+            `${process.env.AUTH_SELF_URL}/user/checkPermission`,
             {
               caId,
               userEmail

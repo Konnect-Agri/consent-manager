@@ -11,10 +11,10 @@ export class UserService {
       const userRes = await lastValueFrom(
         this.httpService
           .get(
-            `https://auth.konnect.samagra.io/api/user?email=${email}`,
+            `${process.env.FUSION_AUTH_URL}/api/user?email=${email}`,
             {
               headers: {
-                Authorization: 'S2lTEmQZHrIjWUq30-4UJQDq0FYqSXOUhak24zcYZHYFbXTKawwCu0dr'
+                Authorization: process.env.FUSION_AUTH_API_KEY
               }
             }
           )
@@ -40,7 +40,7 @@ export class UserService {
       let userRes = await lastValueFrom(
         this.httpService
           .get(
-            `http://localhost:6000/user/${data.userEmail}`, {
+            `${process.env.AUTH_SELF_URL}/user/${data.userEmail}`, {
             headers: {
               Authorization: token
             }
@@ -61,12 +61,12 @@ export class UserService {
       const userUpdateRes = await lastValueFrom(
         this.httpService
           .put(
-            `https://auth.konnect.samagra.io/api/user/${userRes.id}`, {
+            `${process.env.FUSION_AUTH_URL}/api/user/${userRes.id}`, {
             user: userRes
           },
             {
               headers: {
-                Authorization: 'S2lTEmQZHrIjWUq30-4UJQDq0FYqSXOUhak24zcYZHYFbXTKawwCu0dr'
+                Authorization: process.env.FUSION_AUTH_API_KEY
               }
             }
           )
@@ -89,7 +89,7 @@ export class UserService {
       let userRes = await lastValueFrom(
         this.httpService
           .get(
-            `http://localhost:6000/user/${data.userEmail}`, {
+            `${process.env.AUTH_SELF_URL}/user/${data.userEmail}`, {
             headers: {
               Authorization: token
             }
