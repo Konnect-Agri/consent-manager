@@ -1,4 +1,6 @@
 export class AuthDto {
   caId: string
-  gql: string
+  requestType: string
+  gql?: string
+  queryObject?: JSON
 }

@@ -8,8 +8,10 @@ export class ReqCheckerController {
   @Post()
   async reqChecker(@Body() body) {
     console.log('body: ', body);
-    console.log('gql:', body.gql);
     console.log('consentArtifact: ', body.consentArtifact);
-    return this.reqCheckerService.reqChecker(body.consentArtifact, body.gql);
+    console.log('requestType: ', body.requestType)
+    console.log('gql: ', body.gql)
+    console.log('queryObject: ', body.queryObject)
+    return this.reqCheckerService.reqChecker(body);
   }
 }

@@ -8,36 +8,36 @@ import { ConsentArtifact } from './interface/req-checker.interface';
 export class ReqCheckerService {
   constructor(private readonly httpService: HttpService) { }
 
-  async reqChecker(consentArtifact: any, gqlQuery: string) {
-    console.log('consentArt: ', consentArtifact);
-    console.log('gqlQuery: ', gqlQuery);
-    if (!isSubset(consentArtifact.consent_artifact.data, gqlQuery)) {
+  async reqChecker(body: any) {
+    let consentArtifact = body.consentArtifact
+    let gqlQuery = body.gql
+    let requestType = body.requestType
+    let queryObject = body.queryObject
+
+    if (!isSubset(consentArtifact.consent_artifact.data, requestType == 'GQL' ? gqlQuery : queryObject)) {
       throw new ForbiddenException('Forbidden.');
     } else {
       // call the resolver here
-      const data = {
-        gql: gqlQuery,
-      };
 
       const requestOptions = {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: data,
+        body: body,
         redirect: 'follow',
       };
       try {
         const responseData = await lastValueFrom(
           this.httpService
-            .post(process.env.RESOLVER_URI, data, requestOptions)
+            .post(process.env.RESOLVER_URI, body, requestOptions)
             .pipe(
               map((response) => {
                 return response.data;
               }),
             ),
         );
-        console.log(responseData.data);
-        return responseData.data;
+        console.log(responseData);
+        return responseData;
       } catch (err) {
         console.log('error: ', err);
       }
