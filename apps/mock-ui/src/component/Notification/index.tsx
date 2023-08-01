@@ -11,7 +11,7 @@ const NotificationItem: React.FC<Props> = (props) => {
   const notification = useNotification(data);
   console.log("notification", notification, data);
   const submitResponse = async (choice: string) => {
-    const url = `${data?.customAttributes?.collector?.url}/${data?.customAttributes?.id}/${choice}`;
+    const url = `${data?.customAttributes?.collector?.url}/auth/${data?.customAttributes?.id}/${choice}`;
     const res = await markFarmerChoice(url).catch((err) => {
       console.log(err);
     });

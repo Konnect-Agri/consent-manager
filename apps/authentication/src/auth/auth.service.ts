@@ -44,7 +44,12 @@ export class AuthService {
           this.httpService
             .post(
               process.env.LINK_TO_AUTHORIZATION_SERVICE,
-              { consentArtifact: caRes, gql: authDTO.gql }
+              {
+                consentArtifact: caRes,
+                requestType: authDTO.requestType,
+                gql: authDTO.gql,
+                queryObject: authDTO.queryObject
+              }
             )
             .pipe(map((response) => response.data)),
         );

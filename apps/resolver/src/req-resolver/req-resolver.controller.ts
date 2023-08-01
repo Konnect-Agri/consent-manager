@@ -8,7 +8,6 @@ export class ReqResolverController {
   @Post()
   resolveQuery(@Body() body) {
     console.log('body: ', body);
-    console.log('gql: ', body.gql);
-    return this.resolverService.resolveQuery(body.gql);
+    return this.resolverService.resolveQuery(body);
   }
 }

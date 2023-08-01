@@ -6,7 +6,7 @@ export const markFarmerChoice = async (url: string) => {
     {},
     {
       headers: {
-        authorization: localStorage.getItem("token"),
+        authorization: 'Bearer ' + localStorage.getItem("token"),
       },
     }
   );

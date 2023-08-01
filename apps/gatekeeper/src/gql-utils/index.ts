@@ -2,17 +2,24 @@ import { parse, Entity } from './model';
 // import diff from 'microdiff';
 
 // KONNECT: Gatekeeper
-export const isSubset = (A: string, B: string): boolean => {
-  const astA = parse(A);
-  const astB = parse(B);
-  let subset = true;
-  astB.forEach((entity, name) => {
-    // console.log(name)
-    if (!isEntitySubset(astA.get(name), entity)) {
-      subset = false;
-    }
-  });
-  return subset;
+export const isSubset = (A: string, B: string | Array<string>): boolean => {
+  if (!B || !A) return false;
+
+  if (typeof B == 'string') {
+    const astA = parse(A);
+    const astB = parse(B);
+    let subset = true;
+    astB.forEach((entity, name) => {
+      // console.log(name)
+      if (!isEntitySubset(astA.get(name), entity)) {
+        subset = false;
+      }
+    });
+    return subset;
+  } else {
+    //@ts-ignore
+    return B.data.every(val => A.includes(val))
+  }
 };
 
 function isEntitySubset(A: Entity | undefined, B: Entity | undefined): boolean {

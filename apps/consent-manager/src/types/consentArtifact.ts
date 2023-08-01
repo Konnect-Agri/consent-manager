@@ -15,7 +15,7 @@ export type ConsentArtifact = {
     frequency: Frequency
     total_queries_allowed: number
     log: Log
-    data: string
+    data: string | Array<string>
     proof: TheProofSchema
     [k: string]: unknown
 }
